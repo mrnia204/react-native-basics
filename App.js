@@ -1,29 +1,72 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, Button } from 'react-native';
+import { StatusBar } from "expo-status-bar";
+import { StyleSheet, Text, View, Button, TextInput } from "react-native";
+
+import { useState } from "react";
+import { endEvent } from "react-native/Libraries/Performance/Systrace";
 
 export default function App() {
+  const [enteredGoalText, setEnteredGoalText] = useState('');
+  const [courseGoals, setCourseGoals] = useState([]);
+
+  const goalInputHandler = (enteredText) => {
+    setEnteredGoalText(enteredText);
+  };
+
+  const addGoalHandler = () => {
+    setCourseGoals((currentCourseGoals) => 
+      [
+        ...currentCourseGoals, 
+        enteredGoalText
+      ]);
+  }
+
   return (
-    <View style={styles.container}>
-      <Text style={styles.dummyText}>
-        Hello World!! yes
-      </Text>
-      <Text style={styles.dummyText}>Trial</Text>
-      <Button  title='Tab me!'/>
+    <View style={styles.appContainer}>
+      <View style={styles.inputContainer}>
+        <TextInput
+          placeholder="Your course goal!"
+          style={styles.textInput}
+          onChangeText={goalInputHandler}
+        />
+        <Button title="Add Goal" onPress={addGoalHandler} />
+      </View>
+      <View style={styles.goalsContainer}>
+        <Text>
+          {courseGoals.map((goal) => (
+            <Text key={goal.id}>{goal}</Text>
+          ))}
+        </Text>
+      </View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
+  appContainer: {
+    paddingTop: 50,
+    paddingHorizontal: 16,
     flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
   },
-  dummyText: {
-    margin: 16,
-    padding: 16,
-    borderWidth: 2,
-    borderColor: 'red',
-  }
+
+  inputContainer: {
+    flex: 1,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginBottom: 24,
+    borderBottomWidth: 1,
+    borderBottomColor: "#cccccc",
+  },
+
+  textInput: {
+    borderWidth: 1,
+    borderColor: "#cccccc",
+    width: "75%",
+    marginRight: 8,
+    padding: 8,
+  },
+
+  goalsContainer: {
+    flex: 4,
+  },
 });
